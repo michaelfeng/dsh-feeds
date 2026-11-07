@@ -175,11 +175,13 @@ Payload: `{ itemId: string; force?: boolean }` (`force` bypasses a cached extrac
 
 The Host prefers the RSS full content stored at fetch time (`bodyHtml`); otherwise it fetches the
 article page and extracts readable content. Non-http(s) and private/loopback article URLs are
-rejected (SSRF guard). Result:
+rejected (SSRF guard). Feed summaries that are only a placeholder (for example Hacker News'
+`<description>Comments</description>`) are stored as an empty summary; an RSS `<comments>` link is
+preserved in `item.comments` so the UI can offer the discussion. Result:
 
 ```ts
 {
-  item: { id, title, link, summary, author: string | null, published: number | null, unread: boolean }
+  item: { id, title, link, summary, comments: string, author: string | null, published: number | null, unread: boolean }
   feed: { id, title, category, site: string | null }
   content: string                     // readable text, bounded
   contentKind: 'article' | 'text' | 'summary'   // 'article' covers stored RSS full content
