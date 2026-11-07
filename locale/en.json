@@ -234,5 +234,6 @@
   "import.pathHint": "Absolute path, or a path starting with ~/.",
   "import.replaceWarning": "Replace removes subscriptions missing from this file and resets categories (up to {count} sources affected).",
   "import.replaceConfirm": "I understand that replace removes subscriptions missing from the file.",
-  "import.confirmRequired": "Confirm the replace warning first."
+  "import.confirmRequired": "Confirm the replace warning first.",
+  "list.countLoaded": "{count} articles"
 }

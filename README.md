@@ -3,7 +3,7 @@
 [![CI](https://github.com/michaelfeng/dsh-feeds/actions/workflows/ci.yml/badge.svg)](https://github.com/michaelfeng/dsh-feeds/actions/workflows/ci.yml)
 [![License: MIT](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
 [![DeepSeek Harness](https://img.shields.io/badge/DeepSeek%20Harness-0.2.2--rc.1-6b46c1)](https://github.com/deepseek-ai/deepseek-harness)
-[![Version](https://img.shields.io/badge/version-1.2.0-informational)](CHANGELOG.md)
+[![Version](https://img.shields.io/badge/version-1.2.1-informational)](CHANGELOG.md)
 
 把 Feedly / RSS 订阅接进 [DeepSeek Harness](https://github.com/deepseek-ai/deepseek-harness)：左侧边栏多一个
 **「信息源」全局面板**，模型也获得一个 `feeds` 工具，可以直接回答「我的订阅今天有什么新内容」。
@@ -152,7 +152,7 @@ flowchart LR
 
 ```bash
 npm run check      # node --check 三个运行文件
-npm test           # 119 项离线回归（node:test，不访问网络）
+npm test           # 122 项离线回归（node:test，不访问网络）
 npm run benchmark  # 查询/传输基准（合成数据）
 ```
 

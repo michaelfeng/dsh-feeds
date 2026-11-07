@@ -234,5 +234,6 @@
   "import.pathHint": "支持 ~/ 开头或绝对路径。",
   "import.replaceWarning": "替换会删除文件中不存在的订阅并重置分类（最多影响 {count} 个订阅源）。",
   "import.replaceConfirm": "我了解替换会删除文件中不存在的订阅。",
-  "import.confirmRequired": "请先勾选替换确认。"
+  "import.confirmRequired": "请先勾选替换确认。",
+  "list.countLoaded": "{count} 篇"
 }

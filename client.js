@@ -188,6 +188,7 @@ window.__ModuleLoader__.load({
       "saved.failed": "Could not save. Previous state restored.",
       "saved.empty": "Your read-later queue is empty",
       "list.count": "Loaded {loaded} of {total}",
+      "list.countLoaded": "{count} articles",
       "list.more": "Load more",
       "list.failed": "Could not load articles. Try again.",
       "markAll.loaded": "Mark {count} loaded articles read",
@@ -428,6 +429,7 @@ window.__ModuleLoader__.load({
       "saved.failed": "保存失败，已恢复原状态。",
       "saved.empty": "稍后读列表为空",
       "list.count": "已加载 {loaded} / {total} 条",
+      "list.countLoaded": "{count} 篇",
       "list.more": "加载更多",
       "list.failed": "文章加载失败，请重试。",
       "markAll.loaded": "已加载的 {count} 条标为已读",
@@ -2057,6 +2059,48 @@ window.__ModuleLoader__.load({
 .dsh-feeds-filterSummary { display:flex; align-items:center; flex-wrap:wrap; gap:8px; padding:6px 0 0; font-size:12px; color:var(--dsw-alias-label-secondary); }
 .dsh-feeds-filterSummary>span { min-width:0; overflow-wrap:anywhere; }
 .dsh-feeds-settingsOptions { max-width:min(280px,calc(100vw - 32px)); max-height:70dvh; overflow-y:auto; }
+
+/* --- minimalist list pass --- */
+.dsh-feeds-bodyInner.hasPane .dsh-feeds-listPane { flex:0 0 clamp(320px,31%,380px); max-width:380px; border-right:1px solid var(--dsw-alias-border-l1); }
+.dsh-feeds-listPane { background:var(--dsw-alias-bg-base); }
+.dsh-feeds-listContent { padding:0 0 32px; }
+.dsh-feeds-listToolbar { padding:14px 16px 8px; font-size:11px; line-height:16px; letter-spacing:.05em; color:var(--dsw-alias-label-secondary); background:transparent; }
+.dsh-feeds-listToolbar>span:first-child { opacity:.72; }
+.dsh-feeds-markAll { border:0; height:auto; padding:0; background:transparent; color:var(--dsw-alias-label-secondary); font:inherit; font-size:11px; letter-spacing:.02em; cursor:pointer; }
+.dsh-feeds-markAll:hover:not(:disabled) { color:var(--dsw-alias-brand-primary); background:transparent; }
+.dsh-feeds-markAll:disabled { opacity:.4; cursor:default; }
+.dsh-feeds-groupHead { padding:18px 16px 6px; margin:0; border:0; background:var(--dsw-alias-bg-base); font-size:10.5px; font-weight:600; line-height:14px; letter-spacing:.14em; text-transform:uppercase; color:var(--dsw-alias-label-secondary); opacity:.65; }
+.dsh-feeds-group + .dsh-feeds-group { margin-top:0; }
+.dsh-feeds-row { padding:12px 16px 13px; gap:10px; border-radius:0; }
+.dsh-feeds-row + .dsh-feeds-row { border-top:0; }
+.dsh-feeds-row:hover { background:var(--dsw-alias-bg-layer-1); }
+.dsh-feeds-row.isSelected,.dsh-feeds-row.isSelected:hover { background:var(--dsw-alias-bg-layer-1); box-shadow:inset 2px 0 0 var(--dsw-alias-brand-primary); }
+.dsh-feeds-rowBody { gap:0; padding-right:22px; }
+.dsh-feeds-rowTitle { font-size:14.5px; line-height:21px; font-weight:600; letter-spacing:-.004em; }
+.dsh-feeds-rowTitle:hover { text-decoration:none; color:var(--dsw-alias-brand-primary); }
+.dsh-feeds-row[data-unread='false'] .dsh-feeds-rowTitle { color:var(--dsw-alias-label-secondary); font-weight:500; }
+.dsh-feeds-rowSummary { margin-top:4px; font-size:12.5px; line-height:19px; color:var(--dsw-alias-label-secondary); opacity:.86; }
+.dsh-feeds-rowMeta { margin-top:6px; font-size:11px; line-height:16px; opacity:.72; }
+.dsh-feeds-sourceLink { max-width:220px; color:inherit; font:inherit; background:transparent; border:0; padding:0; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; cursor:pointer; }
+.dsh-feeds-sourceLink:hover { color:var(--dsw-alias-label-primary); text-decoration:none; }
+.dsh-feeds-dotSlot { width:8px; height:21px; margin-top:0; }
+.dsh-feeds-dot { width:5px; height:5px; }
+.dsh-feeds-toggle { position:absolute; top:10px; right:10px; width:24px; height:24px; opacity:0; pointer-events:none; transition:opacity 120ms ease; }
+.dsh-feeds-row:hover .dsh-feeds-toggle,.dsh-feeds-row.isSelected .dsh-feeds-toggle,.dsh-feeds-row:focus-within .dsh-feeds-toggle { opacity:1; pointer-events:auto; }
+.dsh-feeds-feedCluster { margin:0; border:0; border-radius:0; }
+.dsh-feeds-clusterHead { padding:12px 16px 4px; background:transparent; gap:8px; }
+.dsh-feeds-clusterTitle { font-size:10.5px; line-height:14px; font-weight:600; letter-spacing:.12em; text-transform:uppercase; color:var(--dsw-alias-label-secondary); opacity:.8; }
+.dsh-feeds-clusterTitle:hover { color:var(--dsw-alias-label-primary); }
+.dsh-feeds-clusterCount { font-size:10.5px; line-height:14px; letter-spacing:.04em; opacity:.55; }
+.dsh-feeds-clusterFold { color:var(--dsw-alias-label-secondary); opacity:.55; padding:2px; }
+.dsh-feeds-clusterFold:hover { opacity:1; }
+.dsh-feeds-healthShortcut { margin:2px 16px 8px; padding:6px 10px; font-size:11px; line-height:16px; border-radius:6px; }
+.dsh-feeds-loadMore { margin:10px 16px 0; font-size:11px; }
+.dsh-feeds-nav { flex-basis:196px; padding:14px 10px 32px; background:transparent; }
+.dsh-feeds-nav summary { font-size:11px; letter-spacing:.02em; padding:7px 4px; opacity:.78; }
+.dsh-feeds-navSource { padding:6px 8px; font-size:12px; border-radius:5px; }
+.dsh-feeds-navSource:hover,.dsh-feeds-navSource.isSelected { background:var(--dsw-alias-bg-layer-1); color:var(--dsw-alias-label-primary); }
+.dsh-feeds-navSource>span:last-child { font-size:10.5px; opacity:.6; }
 `;
 
     /**
@@ -3030,15 +3074,11 @@ window.__ModuleLoader__.load({
             if (event !== null && typeof event === 'object') event.stopPropagation();
             onFilterSource(item);
           },
-        }, [h(SourceIcon,{key:'icon',source:item.link,title:item.feedTitle}),h('span',{key:'name'},item.feedTitle)]));
+        }, item.feedTitle));
       }
       if (time !== '') {
         if (meta.length > 0) meta.push(h('span', { key: 'sep1', className: 'dsh-feeds-metaSeparator' }, ' · '));
         meta.push(time);
-      }
-      if (item.category !== '') {
-        if (meta.length > 0) meta.push(h('span', { key: 'sep2', className: 'dsh-feeds-metaSeparator' }, ' · '));
-        meta.push(item.category);
       }
       const className = selected ? 'dsh-feeds-row isSelected' : 'dsh-feeds-row';
       return h('li', {
@@ -4044,6 +4084,8 @@ window.__ModuleLoader__.load({
       const listPosition = React.useRef(prefs.listPosition || 0);
       const prefState = React.useRef(null);
       const initialListRestore = React.useRef(true);
+      const revealSelection = React.useRef(null);
+      const listAnchor = React.useRef(null);
       const shortcuts = React.useRef(null);
       const allFeeds = snapshot ? snapshot.categories.flatMap(entry => entry.feeds) : [];
       const selectedFeed = allFeeds.find(feed=>feed.id===feedId) || null;
@@ -4077,7 +4119,16 @@ window.__ModuleLoader__.load({
         if(!pending.size)return list;
         return list.map(item=>{const entry=pending.get(item.id);return entry?{...item,...(entry.unread!==undefined?{unread:entry.unread}:{}),...(entry.saved!==undefined?{saved:entry.saved}:{})}:item;});
       };
-      const selectItem = item => {
+      const selectItem = (item, options = {}) => {
+        if (scrollRef.current) {
+          const node = rows.current.get(item.id);
+          if (node) {
+            const listRect = scrollRef.current.getBoundingClientRect();
+            const rowRect = node.getBoundingClientRect();
+            listAnchor.current = { id: item.id, offset: rowRect.top - listRect.top };
+          }
+        }
+        if (options.reveal === true) revealSelection.current = item.id;
         rememberScroll();
         if(groupBySource) {
           const day=dayGroupOf(itemTimeOf(item)||0,clock);
@@ -4136,7 +4187,9 @@ window.__ModuleLoader__.load({
           return;
         }
         pendingOverlay.current.set(item.id,{...(pendingOverlay.current.get(item.id)||{}),unread,at:Date.now()});
-        if(unreadOnly&&unread===false)setEpoch(value=>value+1);
+        // Auto-read should not refetch and jump the unread queue under the reader;
+        // keep the row visible until the next explicit reload or filter change.
+        if(unreadOnly&&unread===false&&options.auto!==true)setEpoch(value=>value+1);
       };
       const saveItem = async item => {
         if (!item) return;
@@ -4615,10 +4668,27 @@ window.__ModuleLoader__.load({
         },readMode==='open'?0:2000);
         return()=>clearTimeout(timer);
       },[selected?.id,article.itemId,article.status,readMode,visible]);
+      React.useLayoutEffect(() => {
+        if(!selected?.id)return;
+        const list = scrollRef.current;
+        const node = rows.current.get(selected.id);
+        if(!list || !node) return;
+        if(revealSelection.current===selected.id){
+          revealSelection.current=null;
+          node.scrollIntoView?.({block:'nearest'});
+          return;
+        }
+        const anchor = listAnchor.current;
+        if(anchor && anchor.id===selected.id){
+          const listRect=list.getBoundingClientRect();
+          const rowRect=node.getBoundingClientRect();
+          const delta=(rowRect.top-listRect.top)-anchor.offset;
+          if(Math.abs(delta)>1) list.scrollTop += delta;
+        }
+      },[selected?.id]);
       React.useEffect(() => {
         if(!selected?.id||article.status!=='ready')return;
         if(readerRef.current)readerRef.current.scrollTop=positions.current[selected.id]||0;
-        const node=rows.current.get(selected.id);node?.scrollIntoView?.({block:'nearest'});
       },[selected?.id,article.itemId,article.status]);
       React.useEffect(() => {
         if(loading||!scrollRef.current)return;
@@ -4628,7 +4698,7 @@ window.__ModuleLoader__.load({
         if(mode!==MODE_FEED||!items.length)return;
         const i=selectedItem?items.findIndex(item=>item.id===selectedItem.id):-1;
         const next=i<0?(delta>0?0:items.length-1):Math.max(0,Math.min(items.length-1,i+delta));
-        selectItem(items[next]);
+        selectItem(items[next], { reveal: true });
       };
       shortcuts.current={move,open:()=>selectedItem&&openUrl(selectedItem.link),toggle:()=>selectedItem&&void markItem(selectedItem,!selectedItem.unread),refresh:()=>void refreshNow(),escape:()=>{if(helpOpen)setHelpOpen(false);else if(selectedItem)closePane();else setSearch('');}};
       React.useEffect(() => {
@@ -4731,10 +4801,10 @@ window.__ModuleLoader__.load({
             button('unread',`${t('filter.unread')} ${snapshot.stats.unread}`,()=>{closePane();setCategory(ALL_CATEGORIES);setFeedId(null);setUnreadOnly(true);setSavedOnly(false);setSearch('');setQuery('');}),
             button('saved',`${t('saved.label')} ${snapshot.stats.saved||0}`,()=>{closePane();setCategory(ALL_CATEGORIES);setFeedId(null);setUnreadOnly(false);setSavedOnly(true);setSearch('');setQuery('');}),
           ]),
-          ...snapshot.categories.map(group=>h('details',{key:group.name,open:category===group.name||snapshot.categories.length<=5},[
+          ...snapshot.categories.map(group=>h('details',{key:group.name,open:category===group.name},[
             h('summary',{key:'name'},`${categoryLabel(group.name,t)} · ${group.feeds.length}`),
             ...group.feeds.map(feed=>h('button',{key:feed.id,type:'button','data-feed-id':feed.id,className:`dsh-feeds-navSource${feedId===feed.id?' isSelected':''}`,onClick:()=>onlySource(feed),title:feed.title},[
-              h('span',{key:'title',className:'dsh-feeds-navSourceName'},[h(SourceIcon,{key:'icon',source:feed.site||feed.url,title:feed.title}),h('span',{key:'text'},feed.title)]),feed.unread?h('span',{key:'count'},String(feed.unread)):null,
+              h('span',{key:'title',className:'dsh-feeds-navSourceName'},h('span',{key:'text'},feed.title)),feed.unread?h('span',{key:'count'},String(feed.unread)):null,
             ])),
           ])),
           button('manage',t('mode.sources'),()=>{closePane();setMode(MODE_SOURCES);}),
@@ -4755,9 +4825,9 @@ window.__ModuleLoader__.load({
               const shown=expanded?updates:updates.slice(0,3);
               return h('section',{key:id,className:'dsh-feeds-feedCluster'},[
                 h('div',{key:'head',className:'dsh-feeds-clusterHead'},[
-                  h('button',{key:'source',type:'button',className:'dsh-feeds-clusterTitle',onClick:()=>onlySource(updates[0])},[h(SourceIcon,{key:'icon',source:updates[0].link,title:updates[0].feedTitle}),updates[0].feedTitle]),
+                  h('button',{key:'source',type:'button',className:'dsh-feeds-clusterTitle',onClick:()=>onlySource(updates[0])},updates[0].feedTitle),
                   h('span',{key:'count',className:'dsh-feeds-clusterCount'},t('group.updates',{count:updates.length})),
-                  updates.length>3?h('button',{key:'fold',type:'button',className:'dsh-feeds-clusterFold','aria-expanded':expanded,onClick:()=>setExpandedGroups(current=>({...current,[key]:!expanded}))},t(expanded?'group.collapse':'group.expand',{count:updates.length-3})):null,
+                  updates.length>3?h('button',{key:'fold',type:'button',className:'dsh-feeds-clusterFold','aria-expanded':expanded,'aria-label':t(expanded?'group.collapse':'group.expand',{count:updates.length-3}),onClick:()=>setExpandedGroups(current=>({...current,[key]:!expanded}))},h(ChevronIcon,{open:expanded})):null,
                 ]),
                 h('ul',{key:'updates',className:'dsh-feeds-list'},shown.map(item=>renderRow(item,true))),
               ]);
@@ -4767,8 +4837,8 @@ window.__ModuleLoader__.load({
         const unreadLoaded=items.filter(item=>item.unread).length;
         const list=h('div',{key:'list',className:'dsh-feeds-listPane',ref:scrollRef,onScroll:rememberScroll},h('div',{className:'dsh-feeds-listContent'},[
           h('div',{key:'toolbar',className:'dsh-feeds-listToolbar'},[
-            h('span',{key:'count',role:'status'},page.total===null?(listError?t('list.failed'):t('view.loading')):t('list.count',{loaded:items.length,total:page.total})),
-            items.length?button('mark',t('markAll.loaded',{count:unreadLoaded}),()=>void markLoaded(),{disabled:!unreadLoaded||loading}):null,
+            h('span',{key:'count',role:'status'},page.total===null?(listError?t('list.failed'):t('view.loading')):(page.total===items.length?t('list.countLoaded',{count:items.length}):t('list.count',{loaded:items.length,total:page.total}))),
+            unreadLoaded>0?button('mark',t('markAll.label'),()=>void markLoaded(),{'aria-label':t('markAll.loaded',{count:unreadLoaded}),disabled:loading,className:'dsh-feeds-markAll'}):null,
           ]),
           markAll?h(MarkAllNotice,{key:'undo',count:markAll.count,t,onUndo:()=>void undoMark()}):null,
           (selectedFeed ? selectedFeed.error : snapshot.stats.failed)?h('button',{key:'health',type:'button',className:'dsh-feeds-healthShortcut',onClick:()=>{closePane();setFailedOnly(true);setMode(MODE_SOURCES);}},selectedFeed?t('health.currentSource',{error:selectedFeed.error}):t('health.manage',{count:snapshot.stats.failed})):null,
