@@ -1613,6 +1613,8 @@ export class FeedService {
         if (item.bodyHtml) prior.bodyHtml = item.bodyHtml;
         prior.title = item.title;
         prior.summary = item.summary;
+        if (item.comments !== undefined) prior.comments = item.comments;
+        else delete prior.comments;
         continue;
       }
       incoming.push({ ...item, feedId: feed.id, fetchedAt: now() });

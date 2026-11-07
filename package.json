@@ -1,6 +1,6 @@
 {
   "name": "dsh-feeds",
-  "version": "1.2.2",
+  "version": "1.2.3",
   "private": true,
   "type": "module",
   "description": "Feedly/RSS subscriptions inside DeepSeek Harness: a global reader panel plus an agent tool",

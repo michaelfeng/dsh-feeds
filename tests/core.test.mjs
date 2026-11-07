@@ -221,3 +221,30 @@ test('Hacker News placeholder summaries are dropped and the comments link is kep
   assert.equal(port.comments, 'https://news.ycombinator.com/item?id=50403063');
   assert.equal(parsed.items.find((item) => item.title === 'Real summary').summary, 'An actual abstract.');
 });
+
+
+test('refresh updates the comments link on an existing item', async () => {
+  const xml = `<?xml version="1.0"?><rss version="2.0"><channel><title>Hacker News</title><link>https://news.ycombinator.com/</link>
+  <item><title>Port 0: The Port That Does Not Exist</title><link>https://acid.vegas/blog/the-port-that-does-not-exist/</link>
+  <comments>https://news.ycombinator.com/item?id=50403063</comments>
+  <description><![CDATA[<a href="https://news.ycombinator.com/item?id=50403063">Comments</a>]]></description></item>
+  </channel></rss>`;
+  const parsed = parseFeed(xml, { url: 'https://news.ycombinator.com/rss' });
+  const bytes = new TextEncoder().encode(xml);
+  const service = new FeedService({
+    dataDir: '/unused',
+    checkDns: false,
+    fetchImpl: async () => ({
+      status: 200,
+      ok: true,
+      url: 'https://news.ycombinator.com/rss',
+      headers: new Headers({ 'content-type': 'application/rss+xml' }),
+      arrayBuffer: async () => bytes,
+    }),
+  });
+  const feed = { id: 'hn', title: 'Hacker News', url: 'https://news.ycombinator.com/rss', site: '', category: 'IT News', read: {}, saved: {}, error: null, items: [{ ...parsed.items[0], summary: 'Comments' }] };
+  service.state.feeds = [feed];
+  await service.refreshOne(feed);
+  assert.equal(feed.items[0].summary, '');
+  assert.equal(feed.items[0].comments, 'https://news.ycombinator.com/item?id=50403063');
+});

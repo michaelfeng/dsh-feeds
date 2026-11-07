@@ -154,7 +154,8 @@ function buildTool(service, ctx) {
           if (!value || typeof value.content !== 'string') return [{ type: 'text', text: '没有可用的正文内容。' }];
           const head = [value.item?.title ?? '', `${value.feed?.title ?? ''}${value.feed?.category ? ` · ${value.feed.category}` : ''}`, value.item?.link ?? ''].filter((line) => line !== '');
           const note = value.contentError ? `\n\n（正文抓取失败：${value.contentError}，以下为订阅源摘要）` : '';
-          return [{ type: 'text', text: `${head.join('\n')}\n\n${value.content}${note}` }];
+          const comments = value.item?.comments ? `\n\n讨论：${value.item.comments}` : '';
+          return [{ type: 'text', text: `${head.join('\n')}\n\n${value.content}${note}${comments}` }];
         }
         if (action === 'mark') return [{ type: 'text', text: (value?.marked ?? 0) === 0 ? '没有找到匹配的条目，请把 digest 结果里的 id 原样传给 mark。' : `已更新 ${value.marked} 个条目的已读状态。` }];
         if (action === 'add') {
