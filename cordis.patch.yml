@@ -1,0 +1,9 @@
+# Feedly/RSS reader: host fetches and parses the feeds, the Client renders the
+# "信息源" global sidebar panel, and the `feeds` tool exposes the same data to the agent.
+- insert:
+    - id: feeds
+      name: 'dsh-feeds'
+      config:
+        dataDir: !!js dshHomePath('feeds')
+        refreshMinutes: 30
+        # allowPrivateHosts: true   # opt in for intentional intranet RSS/article sources

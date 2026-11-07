@@ -1,0 +1,51 @@
+name: Bug report
+description: Report a reproducible problem with dsh-feeds
+labels: [bug]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for the report. Please redact personal feed URLs, emails and tokens from logs/screenshots.
+  - type: input
+    id: version
+    attributes:
+      label: dsh-feeds version
+      placeholder: "1.2.0 (package.json or plugin manager)"
+    validations:
+      required: true
+  - type: input
+    id: dsh
+    attributes:
+      label: DeepSeek Harness version / channel
+      placeholder: "0.2.2-rc.1 Desktop"
+    validations:
+      required: true
+  - type: input
+    id: os
+    attributes:
+      label: OS
+      placeholder: "macOS 15 / Windows 11 / Ubuntu 24.04"
+    validations:
+      required: true
+  - type: textarea
+    id: steps
+    attributes:
+      label: Steps to reproduce
+      placeholder: |
+        1. Open 信息源
+        2. ...
+    validations:
+      required: true
+  - type: textarea
+    id: expected
+    attributes:
+      label: Expected behavior
+    validations:
+      required: true
+  - type: textarea
+    id: actual
+    attributes:
+      label: Actual behavior and logs
+      description: Include `last-boot.json` and console errors if relevant; redact personal data.
+    validations:
+      required: false

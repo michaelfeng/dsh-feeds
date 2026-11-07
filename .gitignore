@@ -1,0 +1,14 @@
+# Dependencies (none required for the plugin itself; only for local tooling)
+node_modules/
+pnpm-lock.yaml
+
+# Local development artifacts
+.backups/
+.internal/
+*.tar.gz
+*.log
+*.tmp
+.DS_Store
+coverage/
+.env
+.env.*

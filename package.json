@@ -1,0 +1,65 @@
+{
+  "name": "dsh-feeds",
+  "version": "1.2.0",
+  "private": true,
+  "type": "module",
+  "description": "Feedly/RSS subscriptions inside DeepSeek Harness: a global reader panel plus an agent tool",
+  "exports": {
+    ".": "./index.js",
+    "./client": "./client.js",
+    "./locale/*.json": "./locale/*.json",
+    "./icon": "./icon.svg"
+  },
+  "license": "MIT",
+  "files": [
+    "LICENSE",
+    "CHANGELOG.md",
+    "CONTRACT.md",
+    "index.js",
+    "feeds-core.js",
+    "client.js",
+    "cordis.patch.yml",
+    "locale/*.json",
+    "icon.svg",
+    "README.md",
+    "SECURITY.md",
+    "CONTRIBUTING.md",
+    "docs/images/*"
+  ],
+  "dsh": {
+    "bundle": {
+      "patch": "./cordis.patch.yml"
+    },
+    "client": {
+      "platform": "web",
+      "immediately": true,
+      "inject": [
+        "@deepseek-ai/dsh-client-locale",
+        "@deepseek-ai/dsh-client-ui-conversation"
+      ]
+    }
+  },
+  "scripts": {
+    "test": "node --test tests/*.test.mjs",
+    "check": "node --check client.js && node --check feeds-core.js && node --check index.js",
+    "benchmark": "node tools/benchmark.mjs"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/michaelfeng/dsh-feeds.git"
+  },
+  "homepage": "https://github.com/michaelfeng/dsh-feeds#readme",
+  "bugs": {
+    "url": "https://github.com/michaelfeng/dsh-feeds/issues"
+  },
+  "keywords": [
+    "deepseek-harness",
+    "dsh-plugin",
+    "rss",
+    "feed-reader",
+    "feedly",
+    "atom",
+    "opml"
+  ],
+  "author": "dsh-feeds contributors"
+}
