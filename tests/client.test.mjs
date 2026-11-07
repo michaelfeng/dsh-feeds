@@ -49,3 +49,20 @@ test('auto-read in the unread queue does not reload and jump the list',async t=>
  assert.equal(loads,initial,'auto-read must not trigger a list reload');
  assert.ok(marks>=1,'auto-read reached the host');
 });
+
+
+test('Hacker News style summary fallback explains the limitation and offers the discussion',async t=>{
+ const h=createHarness({snapshot:sample,prefs:{readMode:'manual'},helpers:{loadArticle:async id=>({ok:true,value:{
+   item:{...sample.items.find(i=>i.id===id),summary:'',comments:'https://news.ycombinator.com/item?id=50403063'},
+   feed:{id:'hn',title:'Hacker News',category:'IT News',site:'https://news.ycombinator.com/'},
+   content:'',contentKind:'summary',contentSource:'summary',contentError:'fetch failed',
+ }})}});
+ t.after(()=>h.dispose());await h.flush();
+ h.find(n=>n.props.className==='dsh-feeds-rowTitle')[0].props.onClick({stopPropagation(){}});
+ await h.flush();
+ const text=h.text();
+ assert.ok(text.includes('无法从源站读取全文'),text.slice(0,300));
+ assert.ok(text.includes('讨论'),'discussion action should be offered');
+ assert.ok(text.includes('该订阅源只提供标题'),'summary-only explanation should be shown');
+ assert.ok(!text.includes('Comments'),'placeholder summary must not be displayed');
+});

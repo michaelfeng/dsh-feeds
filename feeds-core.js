@@ -335,7 +335,7 @@ function normalizeRssItem(item, feedUrl) {
   const link = pickLink(item, feedUrl);
   const guid = childText(item, 'guid', 'id', 'about');
   const title = stripHtml(childText(item, 'title'), 300) || '(untitled)';
-  return finishItem({ guid, link, title, rawHtml, hasFullContent: !!childText(item, 'encoded', 'content'), published, author: stripHtml(childText(item, 'creator', 'author', 'name'), 120) || null }, feedUrl);
+  return finishItem({ guid, link, title, rawHtml, hasFullContent: !!childText(item, 'encoded', 'content'), published, comments: childText(item, 'comments'), author: stripHtml(childText(item, 'creator', 'author', 'name'), 120) || null }, feedUrl);
 }
 
 function normalizeAtomItem(entry, feedUrl) {
@@ -349,18 +349,30 @@ function normalizeAtomItem(entry, feedUrl) {
   return finishItem({ guid, link, title, rawHtml, hasFullContent: !!childText(entry, 'content'), published, author: author || null }, feedUrl);
 }
 
+const GENERIC_FEED_SUMMARY_RE = /^(?:comments?|discussion|read more|continue reading|view comments?|link|permalink|open|read the full (?:article|story|post))$/i;
+
+/** Hide placeholder descriptions such as Hacker News' literal "Comments". */
+function cleanFeedSummary(html, title) {
+  const text = stripHtml(html, 500).trim();
+  if (text === '' || GENERIC_FEED_SUMMARY_RE.test(text) || text === String(title ?? '').trim()) return '';
+  return text;
+}
+
 function finishItem(partial, feedUrl) {
   const identity = partial.guid || partial.link || `${partial.title}|${partial.published ?? ''}`;
-  return {
+  const comments = typeof partial.comments === 'string' && partial.comments !== '' ? absolutize(partial.comments, feedUrl) : '';
+  const item = {
     id: stableId(feedUrl + '|' + identity),
     guid: partial.guid || '',
     title: partial.title,
     link: partial.link || '',
-    summary: stripHtml(partial.rawHtml, 500),
+    summary: cleanFeedSummary(partial.rawHtml, partial.title),
     bodyHtml: partial.hasFullContent ? String(partial.rawHtml).slice(0, BODY_HTML_LIMIT) : undefined,
     author: partial.author ?? null,
     published: partial.published,
   };
+  if (comments !== '') item.comments = comments;
+  return item;
 }
 
 function parseJsonFeed(source, feedUrl) {
@@ -1736,6 +1748,7 @@ export class FeedService {
         title: item.title,
         link: item.link || '',
         summary: item.summary || '',
+        comments: item.comments || '',
         author: item.author ?? null,
         published: item.published ?? null,
         unread: feed.read?.[item.id] !== 1,

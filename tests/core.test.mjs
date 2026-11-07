@@ -3,7 +3,7 @@ import assert from 'node:assert/strict';
 import fs from 'node:fs/promises';
 import os from 'node:os';
 import path from 'node:path';
-import {FeedService} from '../feeds-core.js';
+import {FeedService,parseFeed} from '../feeds-core.js';
 
 function fixture(n=905){
  const service=new FeedService({dataDir:'/unused'});
@@ -204,4 +204,20 @@ test('an import during an in-flight refresh keeps the imported category after th
  release();await running;
  assert.equal(s.state.feeds.find(feed=>feed.url==='https://example.org/imported').category,'Imported');
  assert.ok(s.state.categories.includes('Imported'));
+});
+
+
+test('Hacker News placeholder summaries are dropped and the comments link is kept', () => {
+  const xml = `<?xml version="1.0"?><rss version="2.0"><channel><title>Hacker News</title><link>https://news.ycombinator.com/</link>
+  <item><title>Port 0: The Port That Does Not Exist</title><link>https://acid.vegas/blog/the-port-that-does-not-exist/</link>
+  <pubDate>Sat, 07 Nov 2026 09:38:26 +0000</pubDate><comments>https://news.ycombinator.com/item?id=50403063</comments>
+  <description><![CDATA[<a href="https://news.ycombinator.com/item?id=50403063">Comments</a>]]></description></item>
+  <item><title>Real summary</title><link>https://example.org/real</link><description>An actual abstract.</description></item>
+  </channel></rss>`;
+  const parsed = parseFeed(xml, { url: 'https://news.ycombinator.com/rss' });
+  const port = parsed.items.find((item) => item.title.startsWith('Port 0'));
+  assert.ok(port);
+  assert.equal(port.summary, '');
+  assert.equal(port.comments, 'https://news.ycombinator.com/item?id=50403063');
+  assert.equal(parsed.items.find((item) => item.title === 'Real summary').summary, 'An actual abstract.');
 });

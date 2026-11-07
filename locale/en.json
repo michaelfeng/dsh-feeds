@@ -77,7 +77,7 @@
   "pane.loading": "Loading article…",
   "pane.failed": "Could not load this article.",
   "pane.fallback": "Showing the stored summary because the full article could not be read.",
-  "pane.fallbackError": "Could not read the full article ({error}). Showing the summary below.",
+  "pane.fallbackError": "The full article isn't available from this source. Showing what the feed provides.",
   "pane.empty": "No readable content.",
   "pane.open": "Open original",
   "pane.summarize": "Send to chat",
@@ -235,5 +235,8 @@
   "import.replaceWarning": "Replace removes subscriptions missing from this file and resets categories (up to {count} sources affected).",
   "import.replaceConfirm": "I understand that replace removes subscriptions missing from the file.",
   "import.confirmRequired": "Confirm the replace warning first.",
-  "list.countLoaded": "{count} articles"
+  "list.countLoaded": "{count} articles",
+  "pane.fallbackHint": "The site may block automated readers, or be temporarily unavailable.",
+  "pane.comments": "Comments",
+  "pane.summaryOnlyBody": "This feed only provides a headline and a link. Open the original or the discussion to read it."
 }

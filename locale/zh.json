@@ -77,7 +77,7 @@
   "pane.loading": "正在加载文章…",
   "pane.failed": "无法加载这篇文章。",
   "pane.fallback": "未能读取原文内容，以下显示订阅源保存的摘要。",
-  "pane.fallbackError": "无法读取原文（{error}），以下显示摘要。",
+  "pane.fallbackError": "无法从源站读取全文，下面显示订阅源提供的内容。",
   "pane.empty": "没有可阅读的内容。",
   "pane.open": "打开原文",
   "pane.summarize": "送入对话",
@@ -235,5 +235,8 @@
   "import.replaceWarning": "替换会删除文件中不存在的订阅并重置分类（最多影响 {count} 个订阅源）。",
   "import.replaceConfirm": "我了解替换会删除文件中不存在的订阅。",
   "import.confirmRequired": "请先勾选替换确认。",
-  "list.countLoaded": "{count} 篇"
+  "list.countLoaded": "{count} 篇",
+  "pane.fallbackHint": "源站可能限制自动抓取，或暂时不可用。",
+  "pane.comments": "讨论",
+  "pane.summaryOnlyBody": "该订阅源只提供标题和链接，打开原文或讨论区阅读全文。"
 }

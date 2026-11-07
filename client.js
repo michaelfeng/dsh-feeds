@@ -129,7 +129,10 @@ window.__ModuleLoader__.load({
       "pane.loading": "Loading article…",
       "pane.failed": "Could not load this article.",
       "pane.fallback": "Showing the stored summary because the full article could not be read.",
-      "pane.fallbackError": "Could not read the full article ({error}). Showing the summary below.",
+      "pane.fallbackError": "The full article isn't available from this source. Showing what the feed provides.",
+      "pane.fallbackHint": "The site may block automated readers, or be temporarily unavailable.",
+      "pane.comments": "Comments",
+      "pane.summaryOnlyBody": "This feed only provides a headline and a link. Open the original or the discussion to read it.",
       "pane.empty": "No readable content.",
       "pane.open": "Open original",
       "pane.summarize": "Send to chat",
@@ -370,7 +373,10 @@ window.__ModuleLoader__.load({
       "pane.loading": "正在加载文章…",
       "pane.failed": "无法加载这篇文章。",
       "pane.fallback": "未能读取原文内容，以下显示订阅源保存的摘要。",
-      "pane.fallbackError": "无法读取原文（{error}），以下显示摘要。",
+      "pane.fallbackError": "无法从源站读取全文，下面显示订阅源提供的内容。",
+      "pane.fallbackHint": "源站可能限制自动抓取，或暂时不可用。",
+      "pane.comments": "讨论",
+      "pane.summaryOnlyBody": "该订阅源只提供标题和链接，打开原文或讨论区阅读全文。",
       "pane.empty": "没有可阅读的内容。",
       "pane.open": "打开原文",
       "pane.summarize": "送入对话",
@@ -2059,6 +2065,7 @@ window.__ModuleLoader__.load({
 .dsh-feeds-filterSummary { display:flex; align-items:center; flex-wrap:wrap; gap:8px; padding:6px 0 0; font-size:12px; color:var(--dsw-alias-label-secondary); }
 .dsh-feeds-filterSummary>span { min-width:0; overflow-wrap:anywhere; }
 .dsh-feeds-settingsOptions { max-width:min(280px,calc(100vw - 32px)); max-height:70dvh; overflow-y:auto; }
+.dsh-feeds-paneWarningHint { display:block; margin-top:4px; font-size:11.5px; line-height:17px; opacity:.72; }
 
 /* --- minimalist list pass --- */
 .dsh-feeds-bodyInner.hasPane .dsh-feeds-listPane { flex:0 0 clamp(300px,31%,380px); max-width:380px; min-width:280px; }
@@ -2439,6 +2446,7 @@ window.__ModuleLoader__.load({
           title: plainText(rawItem.title),
           link: plainText(rawItem.link),
           summary: plainText(rawItem.summary),
+          comments: stringOr(rawItem.comments, ''),
           author: stringOr(rawItem.author, null),
           published: timeOrNull(rawItem.published),
           unread: rawItem.unread !== false,
@@ -3300,7 +3308,7 @@ window.__ModuleLoader__.load({
      * The in-page reading pane: header metadata, title, actions, and the
      * article body. Never throws on a missing article payload.
      */
-    function ReadingPane({ item, article, paneNotice, nowMs, t, focusMode, onToggleFocus, onClose, onRetry, onOpenOriginal, onSummarize, onToggleRead, onCopyLink, onSave, onPrevious, onNext, scrollRef, onScroll, fontSize, onFontSize }) {
+    function ReadingPane({ item, article, paneNotice, nowMs, t, focusMode, onToggleFocus, onClose, onRetry, onOpenOriginal, onOpenUrl, onSummarize, onToggleRead, onCopyLink, onSave, onPrevious, onNext, scrollRef, onScroll, fontSize, onFontSize }) {
       const matches = article !== null && article.itemId === item.id;
       const status = matches ? article.status : 'loading';
       const data = matches ? article.data : null;
@@ -3324,6 +3332,9 @@ window.__ModuleLoader__.load({
         }
       }
       const summaryFallback = ready && data.contentKind === 'summary';
+      const comments = data !== null ? data.item.comments : '';
+      const commentsAvailable = typeof comments === 'string' && comments !== '';
+      const noArticleBody = summaryFallback && paragraphs.length === 0 && !hasBlocks;
       const noticeText = paneNoticeText(paneNotice, t);
       const linkAvailable = link !== '';
       return h('aside', { className: 'dsh-feeds-pane', 'aria-label': t('pane.label'), 'aria-busy': loading }, [
@@ -3380,6 +3391,12 @@ window.__ModuleLoader__.load({
                 disabled: !linkAvailable,
                 onClick: onOpenOriginal,
               }, [h(ExternalIcon, { key: 'icon' }), h('span', { key: 'label' }, t('pane.open'))]),
+              commentsAvailable ? h('button', {
+                key: 'comments',
+                type: 'button',
+                className: 'dsh-feeds-paneAction',
+                onClick: () => onOpenUrl(comments),
+              }, [h(ExternalIcon, { key: 'icon' }), h('span', { key: 'label' }, t('pane.comments'))]) : null,
               h('button', {
                 key: 'summarize',
                 type: 'button',
@@ -3417,10 +3434,10 @@ window.__ModuleLoader__.load({
                   summaryFallback
                     ? h('div', { key: 'warning', className: 'dsh-feeds-paneWarning' }, [
                       h('span', { key: 'icon', className: 'dsh-feeds-paneWarningIcon' }, h(WarningIcon)),
-                      h('span', { key: 'text' },
-                        data.contentError !== null
-                          ? t('pane.fallbackError', { error: data.contentError })
-                          : t('pane.fallback')),
+                      h('span', { key: 'text' }, [
+                        h('span', { key: 'line' }, data.contentError !== null ? t('pane.fallbackError') : t('pane.fallback')),
+                        h('span', { key: 'hint', className: 'dsh-feeds-paneWarningHint', title: data.contentError ?? undefined }, t('pane.fallbackHint')),
+                      ]),
                     ])
                     : null,
                   imageCount > 0
@@ -3433,7 +3450,8 @@ window.__ModuleLoader__.load({
                       t,
                     })))
                     : paragraphs.length === 0
-                      ? h('p', { key: 'empty', className: 'dsh-feeds-paneNotice' }, t('pane.empty'))
+                      ? h('p', { key: 'empty', className: 'dsh-feeds-paneNotice' },
+                        noArticleBody ? t('pane.summaryOnlyBody') : t('pane.empty'))
                       : h('div', { key: 'paragraphs', className: 'dsh-feeds-paneBody' }, paragraphs.map((lines, index) => h('p', {
                         key: index,
                         className: 'dsh-feeds-paneParagraph',
@@ -4859,7 +4877,7 @@ window.__ModuleLoader__.load({
           key:'pane',item:selectedItem,article,paneNotice,nowMs:clock,t,focusMode,scrollRef:readerRef,onScroll:rememberScroll,fontSize,onFontSize:size=>setFontSize(Math.max(14,Math.min(28,size))),
           onToggleFocus:()=>setFocusMode(v=>!v),onClose:closePane,
           onRetry:()=>{cache.current.delete(selectedItem.id);setArticleRetry(current=>({id:selectedItem.id,n:current.n+1}));},
-          onOpenOriginal:()=>openUrl(selectedItem.link),onSummarize:()=>void summarize(selectedItem),
+          onOpenOriginal:()=>openUrl(selectedItem.link),onOpenUrl:openUrl,onSummarize:()=>void summarize(selectedItem),
           onToggleRead:()=>void markItem(selectedItem,!selectedItem.unread),onSave:()=>void saveItem(selectedItem),
           onCopyLink:async()=>{const result=await copyText(selectedItem.link);if(alive.current)setPaneNotice(result==='copied'?'linkCopied':'copyFailed');},
           onPrevious:()=>move(-1),onNext:()=>move(1),
