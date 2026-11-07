@@ -11,6 +11,8 @@
 > **状态：Preview（源码预览版）。** 适配 DeepSeek Harness `0.2.2-rc.1` 的 Desktop / Web GUI，
 > 在 macOS 上实机验证；Windows / Linux 未实机验证。尚未发布 npm 包。
 
+![dsh-feeds — Feedly/RSS inside DeepSeek Harness](docs/marketing/social-preview.png)
+
 Feedly 只是导入来源之一：任何标准 OPML、任意 RSS/Atom/JSON Feed 地址、以及声明了 feed 链接的网站都可以订阅。
 
 ## 界面截图
